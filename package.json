@@ -1,0 +1,40 @@
+{
+  "name": "shopify-schema-manager",
+  "version": "0.0.1",
+  "description": "Shopify theme developer for managing and reusing section/block schemas",
+  "main": "dist/index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "bin": "dist/index.js",
+  "scripts": {
+    "start": "tsc && node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Printy-Studios/shopify-schema-manager.git"
+  },
+  "keywords": [
+    "shopify",
+    "schema",
+    "schemas",
+    "shopify",
+    "schemas"
+  ],
+  "author": "JorensM",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Printy-Studios/shopify-schema-manager/issues"
+  },
+  "homepage": "https://github.com/Printy-Studios/shopify-schema-manager#readme",
+  "dependencies": {
+    "commander": "^10.0.1",
+    "replace": "^1.2.2",
+    "schema-utils": "^4.1.0",
+    "typescript": "^5.1.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.2.5"
+  }
+}
