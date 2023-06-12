@@ -9,6 +9,7 @@
   "bin": "dist/index.js",
   "scripts": {
     "start": "tsc && node dist/index.js",
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -29,9 +30,11 @@
   },
   "homepage": "https://github.com/Printy-Studios/shopify-schema-manager#readme",
   "dependencies": {
+    "chalk": "^5.2.0",
     "commander": "^10.0.1",
     "replace": "^1.2.2",
     "schema-utils": "^4.1.0",
+    "source-map-support": "^0.5.21",
     "typescript": "^5.1.3"
   },
   "devDependencies": {
