@@ -1,16 +1,9 @@
 # TODO
 
 
-- **[60%]** Comments
-  - SchemaManager
-  - ✔️ FileIO
-  - ✔️ IFileIO
-  - ✔️ MiscTypes
-  - ✔️ Schema
-  - ✔️ WriteModeEnum
-  - ✔️ FileToSchemaConverter
 
-- Comments aligned indentation, dashes and capital letters
+
+- Comments aligned indentation, dashes and capital letters, punctuation.
   - FileIO
   - SchemaManager
   - getFunctionResult
@@ -36,6 +29,15 @@
 
 
 # DONE
+
+- **[100%]** Comments
+  - ✔️ SchemaManager
+  - ✔️ FileIO
+  - ✔️ IFileIO
+  - ✔️ MiscTypes
+  - ✔️ Schema
+  - ✔️ WriteModeEnum
+  - ✔️ FileToSchemaConverter
 
 - ✔️ **[100%]** Types
 - ✔️ **schemaObjApply** Apply jsons to other jsons

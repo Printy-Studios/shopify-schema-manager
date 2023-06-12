@@ -10,11 +10,11 @@ export default function FileIO() {
     /**
      * Replace a regex match in a file with a string.
      * 
-     * @param { RegExp } regex - regex to search for.
-     * @param { string } replacement - string to replace with
-     * @param { string } file_path - path to file
+     * @param { RegExp } regex          - Regex to search for.
+     * @param { string } replacement    - String to replace with.
+     * @param { string } file_path      - Path to file.
      * 
-     * @returns { boolean } - true if regex was found and replaced, false if regex wasn't found.
+     * @returns { boolean } - True if regex was found and replaced, false if regex wasn't found.
      */
     this.replaceInFile = ( regex: RegExp, replacement: string, file_path: string ): boolean => {
         //Get contents of file as string
@@ -36,10 +36,10 @@ export default function FileIO() {
     /**
      * Output contents of a directory (non-recursively).
      * 
-     * @param { string } path - path to directory
-     * @param { function } [filterFn] - optional filter function that will be applied with Array.prototype.filter to the results
+     * @param { string }    path        - Path to directory.
+     * @param { function }  [filterFn]  - Optional filter function that will be applied with Array.prototype.filter to the results.
      * 
-     * @returns { string[] } - array of file/directory names
+     * @returns { string[] } - Array of file/directory names
      */
     this.readDir = ( path: string, filterFn?: ( filename: string ) => string[]): string[] => {
 
@@ -56,11 +56,11 @@ export default function FileIO() {
     }
 
     /**
-     * Output contents of a file as string
+     * Output contents of a file as string.
      * 
-     * @param { string } path - path to file
+     * @param { string } path - Path to file.
      * 
-     * @returns { string } - contents of file as string
+     * @returns { string } - Contents of file as string
      */
     this.readFile = ( path: string ): string => {
         return fs.readFileSync( path ).toString();
