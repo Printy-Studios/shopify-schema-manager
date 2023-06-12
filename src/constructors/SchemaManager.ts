@@ -360,12 +360,19 @@ export default function SchemaManager(
 
     }
 
+    /**
+     * Get Schema object from file
+     * 
+     * @param { string } file_path - Filename
+     * 
+     * @return { Promise<Schema> } - Resolves to a Schema object
+     */
     this.schemaFileToObj = async ( file_path: string): Promise<Schema> => {
 
+        //Get extension of the file from filename
         const file_ext = path.extname( file_path );
 
-        //let output: Schema | null;
-
+        //Get name of schema from filename
         let name:string = path.parse( file_path ).name;
 
         //Get converter that supports given file extension
@@ -376,33 +383,12 @@ export default function SchemaManager(
             throw new Error( `No converter was found for filetype ${ file_ext }` );
         }
 
+        //Convert file to Schema object
         const output = converter.convert( file_path, name, this.fileIO);
 
+        //Return result
         return output;
         
-        // if ( file_ext == '.js' ) {
-        //     output = {
-        //         name: name,
-        //         fn: await import( file_path )
-        //     }
-        // } else if ( file_ext == '.json' ) {
-
-        //     let json_str: string = fileIO.readFile( file_path );
-        //     let obj = JSON.parse( json_str );
-        //     const obj_for: string = obj.for;
-        //     delete obj.for;
-
-        //     output = {
-        //         name: name,
-        //         for: obj_for,
-        //         obj: obj
-        //     }
-        // }
-
-        return output;
-
     }
-
-    
 
 }
