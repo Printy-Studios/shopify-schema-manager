@@ -1,8 +1,29 @@
 # TODO
 
+
+- **[60%]** Comments
+  - SchemaManager
+  - ✔️ FileIO
+  - ✔️ IFileIO
+  - ✔️ MiscTypes
+  - ✔️ Schema
+  - ✔️ WriteModeEnum
+  - ✔️ FileToSchemaConverter
+
+- Comments aligned indent
+  - FileIO
+  - SchemaManager
+  - getFunctionResult
+  - FileToSchemaConverter
+  - IFileIO
+  - MiscTypes
+  - Schema
+  - WriteModeEnum 
+
 - **[10%]** Error checking
-- **[10%]** Comments
-- **[5%]** Types
+  - FileIO
+  - SchemaManager
+
 - Schema validation
 - Move types to `types` folder
 
@@ -14,6 +35,7 @@
 
 # DONE
 
+- ✔️ **[100%]** Types
 - ✔️ **schemaObjApply** Apply jsons to other jsons
 - ✔️Fix blocks: [
         {

@@ -10,11 +10,11 @@ export default function FileIO() {
     /**
      * Replace a regex match in a file with a string.
      * 
-     * @param regex { RegExp } regex to search for.
-     * @param replacement { string } string to replace with
-     * @param file_path { string } path to file
+     * @param { RegExp } regex - regex to search for.
+     * @param { string } replacement - string to replace with
+     * @param { string } file_path - path to file
      * 
-     * @return { boolean } true if regex was found and replaced, false otherwise.
+     * @returns { boolean } - true if regex was found and replaced, false if regex wasn't found.
      */
     this.replaceInFile = ( regex: RegExp, replacement: string, file_path: string ): boolean => {
         //Get contents of file as string
@@ -33,19 +33,36 @@ export default function FileIO() {
         return true;
     }
 
-    this.readDir = ( path: string, filter_fn?: ( filename: string ) => string[]): string[] => {
+    /**
+     * Output contents of a directory (non-recursively).
+     * 
+     * @param { string } path - path to directory
+     * @param { function } [filterFn] - optional filter function that will be applied with Array.prototype.filter to the results
+     * 
+     * @returns { string[] } - array of file/directory names
+     */
+    this.readDir = ( path: string, filterFn?: ( filename: string ) => string[]): string[] => {
 
+        //Get all files in specified directory
         let all_files = fs.readdirSync( path );
 
-        if ( filter_fn ) {
-            all_files = all_files.filter( filename => filter_fn );
+        //If filter function is passed, filter all found files according to it
+        if ( filterFn ) {
+            all_files = all_files.filter( filename => filterFn );
         }
-        
 
+        //Return (possibly filtered) list of files in directory
         return all_files;
     }
 
-    this.readFile = ( path: string ) => {
+    /**
+     * Output contents of a file as string
+     * 
+     * @param { string } path - path to file
+     * 
+     * @returns { string } - contents of file as string
+     */
+    this.readFile = ( path: string ): string => {
         return fs.readFileSync( path ).toString();
     }
 

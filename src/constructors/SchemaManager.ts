@@ -1,37 +1,26 @@
+//Core
 import * as path from 'path';
 
+//Constructors
 import FileIO from './FileIO'
 
+//Functions
 import getFunctionResult from '../functions/getFunctionResult';
+
+//Types
+import IFileIO from '../types/IFileIO';
+import { Schema, FnSchema, ObjSchema, SchemasList } from '../types/Schema';
+import { GenericObject } from '../types/MiscTypes';
 import WriteModeEnum from '../types/WriteModeEnum';
+import FileToSchemaConverter from '../types/FileToSchemaConverter';
 
-type FnSchema = {
-    name: string,
-    fn: Function,
-}
 
-type ObjSchema = {
-    name: string,
-    for?: string,
-    obj: GenericObject
-}
 
-type SchemasList = {
-    fn: FnSchema[],
-    obj: ObjSchema[]
-}
 
-type GenericObject = {
-    [key: string]: any
-}
 
-interface IFileIO {
-    replaceInFile: Function,
-    readDir: Function,
-    readFile: ( file_path: string ) => string
-}
 
-type Schema = ObjSchema | FnSchema;
+
+
 
 const jsToSchema = async ( file_path: string, schema_name: string, fileIO: IFileIO ): Promise<FnSchema> => {
     const full_path = path.join (process.cwd(), file_path);
@@ -59,12 +48,6 @@ const jsonToSchema = async ( file_path: string, schema_name: string, fileIO: IFi
     }
 
     return await Promise.resolve( output );
-}
-
-type FileToSchemaConverter = {
-    type: 'fn' | 'obj',
-    file_extension: string,
-    convert: ( file_path: string, schema_name: string, fileIO: IFileIO ) => Promise<Schema>
 }
 
 export default function SchemaManager(
@@ -183,7 +166,7 @@ export default function SchemaManager(
             obj = this.getObjFromObjSchema( all_schemas, setting_schema_name);
         }
 
-        const result = fn ? getFunctionResult(schema_args, fn) : obj;
+        const result = fn ? getFunctionResult(fn, schema_args) : obj;
 
         //Set the schema setting to the result of the function
         return result;
