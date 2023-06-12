@@ -3,15 +3,7 @@
 
 
 
-- Comments aligned indentation, dashes and capital letters, punctuation.
-  - ✔️ FileIO
-  - ✔️ SchemaManager
-  - ✔️ getFunctionResult
-  - ✔️ FileToSchemaConverter
-  - ✔️ IFileIO
-  - ✔️ MiscTypes
-  - ✔️ Schema
-  - WriteModeEnum 
+
 
 - Rename 'liquid_files_path' variables to 'liquid_sections_path' to be more precise and descriptive
 
@@ -30,7 +22,17 @@
 
 # DONE
 
-- **[100%]** Comments
+- ✔️ Comments aligned indentation, dashes and capital letters, punctuation.
+  - ✔️ FileIO
+  - ✔️ SchemaManager
+  - ✔️ getFunctionResult
+  - ✔️ FileToSchemaConverter
+  - ✔️ IFileIO
+  - ✔️ MiscTypes
+  - ✔️ Schema
+  - ✔️ WriteModeEnum 
+
+- ✔️ **[100%]** Comments
   - ✔️ SchemaManager
   - ✔️ FileIO
   - ✔️ IFileIO
