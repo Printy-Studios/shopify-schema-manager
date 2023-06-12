@@ -2,11 +2,11 @@
  * Get result of a function call. This is used to quickly call a function with dynamic parameters that could be either an 
  * array or a single variable such as an object.
  * 
- * @param { Function } fn - Function to call.
- * @param {any} [args] - arguments of function. If this is an array, then each array value is passed as a parameter.
+ * @param { Function }  fn      - Function to call.
+ * @param {any}         [args]  - arguments of function. If this is an array, then each array value is passed as a parameter.
  * Otherwise the whole variable is passed as a single param. If this parameter is undefined, it is not passed.
  * 
- * @returns { any } - result of called function
+ * @returns { any } - Result of called function.
  */
  export default function getFunctionResult(  fn: Function, args?: any ) {
 

@@ -6,27 +6,27 @@ import { GenericObject } from './MiscTypes';
 
 
 /**
- * Base for all derived schema types
+ * Base for all derived schema types.
  * 
- * @param { string } name name of schema. Should be equal to schema's filename without extension
+ * @param { string } name Name of schema. Should be equal to schema's filename without extension.
  */
 type SchemaBase = {
     name: string
 }
 
 /**
- * Function Schema. A schema that stores a function. Derived from SchemaBase
+ * Function Schema. A schema that stores a function. Derived from SchemaBase.
  * 
- * @param { Function } fn - function of the schema
+ * @param { Function } fn - Function of the schema.
  */
 type FnSchema = SchemaBase & {
     fn: Function,
 }
 
 /**
- * Object Schema. A schema that stores an object
+ * Object Schema. A schema that stores an object. Derived from SchemaBase
  * 
- * @param { string } [for] - Name of liquid section to which this schema should be applied
+ * @param { string } [for] - Name of liquid section to which this schema should be applied.
  */
 type ObjSchema = SchemaBase & {
     for?: string,
@@ -34,10 +34,10 @@ type ObjSchema = SchemaBase & {
 }
 
 /**
- * List of Schemas, sorted by FnSchemas and ObjSchemas
+ * List of Schemas, sorted by FnSchemas and ObjSchemas.
  * 
- * @param { FnSchema[] } fn Function Schemas
- * @param { ObjSchema[] } obj Object Schemas
+ * @param { FnSchema[] }    fn  - Function Schemas.
+ * @param { ObjSchema[] }   obj - Object Schemas.
  */
 type SchemasList = {
     fn: FnSchema[],
@@ -45,7 +45,7 @@ type SchemasList = {
 }
 
 /**
- * A Schema that could be either an ObjSchema or a FnSchema
+ * A Schema that could be either an ObjSchema or a FnSchema.
  */
 type Schema = ObjSchema | FnSchema;
 

@@ -1,23 +1,16 @@
 # TODO
 
 
-- **[60%]** Comments
-  - SchemaManager
+
+
+- Comments aligned indentation, dashes and capital letters, punctuation.
   - ✔️ FileIO
+  - ✔️ SchemaManager
+  - ✔️ getFunctionResult
+  - ✔️ FileToSchemaConverter
   - ✔️ IFileIO
   - ✔️ MiscTypes
   - ✔️ Schema
-  - ✔️ WriteModeEnum
-  - ✔️ FileToSchemaConverter
-
-- Comments aligned indentation, dashes and capital letters
-  - FileIO
-  - SchemaManager
-  - getFunctionResult
-  - FileToSchemaConverter
-  - IFileIO
-  - MiscTypes
-  - Schema
   - WriteModeEnum 
 
 - Rename 'liquid_files_path' variables to 'liquid_sections_path' to be more precise and descriptive
@@ -36,6 +29,15 @@
 
 
 # DONE
+
+- **[100%]** Comments
+  - ✔️ SchemaManager
+  - ✔️ FileIO
+  - ✔️ IFileIO
+  - ✔️ MiscTypes
+  - ✔️ Schema
+  - ✔️ WriteModeEnum
+  - ✔️ FileToSchemaConverter
 
 - ✔️ **[100%]** Types
 - ✔️ **schemaObjApply** Apply jsons to other jsons
