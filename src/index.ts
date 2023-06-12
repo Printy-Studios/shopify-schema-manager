@@ -3,13 +3,6 @@ import 'source-map-support/register'
 //Constructors
 import SchemaManager from './constructors/SchemaManager';
 
-//Functions
-import getSchemaFiles from './functions/getSchemaFiles';
-import schemaFilesToObjects from './functions/schemaFilesToObject';
-import schemaObjApplyJS from './functions/schemaObjApply';
-import applySchemasToLiquid from './functions/applySchemasToLiquid';
-
-
 //Types
 import WriteModeEnum from './types/WriteModeEnum';
 

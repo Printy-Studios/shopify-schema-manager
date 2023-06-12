@@ -3,7 +3,8 @@
 - **[10%]** Error checking
 - **[10%]** Comments
 - **[5%]** Types
-- Validation
+- Schema validation
+- Move types to `types` folder
 
 - Merge/overwrite/append options
 

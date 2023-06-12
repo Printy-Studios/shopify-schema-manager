@@ -114,14 +114,9 @@ export default function SchemaManager(
 
         const all_liquid_files = this.fileIO.readDir( liquid_files_path );
 
-        console.log(all_liquid_files);
-
-        console.log('all schemas: ', parsed_schemas);
-
         //Filter only those schemas that have a 'for' property
         const schemas: ObjSchema[] = parsed_schemas.filter( schema => schema.for && typeof schema.for == 'string' );
 
-        console.log('filtered schemas: ', schemas);
 
         for ( const schema of schemas ) {
 
@@ -130,27 +125,6 @@ export default function SchemaManager(
             if( all_liquid_files.includes( target_file ) ) {
                 this.applySchemaToLiquidFile(schema, liquid_files_path, target_file);
             }
-
-            // const target_file = schema.for + '.liquid';
-
-            // if( all_liquid_files.includes( target_file ) ) {
-            //     console.log('modifying ' + target_file );
-            //     const full_path = path.join( full_liquid_path, target_file );
-                
-            //     let file_contents = fs.readFileSync( full_path ).toString();
-
-            //     if ( mode == WriteModeEnum.OverwriteAll ) {
-            //         const schema_output = '{% schema %}\n' +
-            //         JSON.stringify(schema.obj, null, 2) + '\n' +
-            //         '{% endschema %}';
-
-            //         file_contents = file_contents.replace( /{%\s*schema\s*%}.*{%\s*endschema\s*%}/gs, schema_output);
-            //     }
-                
-
-            //     fs.writeFileSync(full_path, file_contents);
-                
-            // }
 
         }
     }
@@ -201,7 +175,7 @@ export default function SchemaManager(
     }
 
     this.parseSchema = (all_schemas: SchemasList, setting_schema_name: string, schema_args: any[]): GenericObject => {
-        //console.log('has "from": ' + setting.from);
+
         // If there is a 'from' property, find the corresponding function/object
         const fn = this.getFunctionFromFnSchema( all_schemas, setting_schema_name);
         let obj = null;
@@ -236,18 +210,6 @@ export default function SchemaManager(
 
                         const parsed_setting = this.parseSchema(schemas_list, setting.from, setting.args);
                         obj_schema.obj.settings[setting_key] = parsed_setting;
-                        //console.log('has "from": ' + setting.from);
-                        // If there is a 'from' property, find the corresponding function/object
-                        // const fn = getFunctionFromJSSchema( js_schemas, setting.from);
-                        // let obj = null;
-                        // if ( !fn ) {
-                        //     obj = getObjFromJSONSchema( json_schemas, setting.from);
-                        // }
-
-                        // const result = fn ? getFunctionResult(setting.args, fn) : obj;
-
-                        // //Set the schema setting to the result of the function
-                        // json_schema.obj.settings[setting_key] = result;
 
                     }
                 }
@@ -262,7 +224,7 @@ export default function SchemaManager(
                     if ( block.from && typeof block.from == 'string' ) {
                         //If yes, apply the function that corresponds to the 'from' property's value
                         const parsed_schema = this.parseSchema( schemas_list, block.from, block.args);
-                        //console.log("BLOCK RESULT: ", result);
+
                         block = parsed_schema;
 
                     }
@@ -296,16 +258,16 @@ export default function SchemaManager(
             obj: []
         }
 
-        console.log(filenames);
 
         for ( const filename of filenames) {
+
             const schema_obj = await this.schemaFileToObj( path.join( schemas_path, filename ) );
-            console.log('schema obj: ', schema_obj);
             if ( schema_obj.fn ) {
                 output.fn.push( schema_obj );
             } else if ( schema_obj.obj ) {
                 output.obj.push( schema_obj );
             }
+            
         }
 
         return await Promise.resolve(output);
