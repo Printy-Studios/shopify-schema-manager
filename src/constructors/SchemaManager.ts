@@ -226,18 +226,27 @@ export default function SchemaManager(
         return target_schema.obj;
     }
 
-    this.parseSchema = (all_schemas: SchemasList, setting_schema_name: string, schema_args: any[]): GenericObject => {
+    /**
+     * Parse schema, meaning return the .obj of schema if it's a ObjSchema, and result of .fn of schema if it's a FnSchema
+     * 
+     * @param { SchemasList }   all_schemas - List of all schemas
+     * @param { string }        schema_name - Name of schema to parse
+     * @param { any[] }         schema_args - Arguments for schema, if any
+     * 
+     * @returns { GenericObject } - parsed schema .obj or result of .fn
+     */
+    this.parseSchema = (all_schemas: SchemasList, schema_name: string, schema_args: any[]): GenericObject => {
 
-        // If there is a 'from' property, find the corresponding function/object
-        const fn = this.getFunctionFromFnSchema( all_schemas, setting_schema_name);
+        //Find .obj or .fn of schema
+        const fn = this.getFunctionFromFnSchema( all_schemas, schema_name);
         let obj = null;
         if ( !fn ) {
-            obj = this.getObjFromObjSchema( all_schemas, setting_schema_name);
+            //If .fn not found, store .obj in var
+            obj = this.getObjFromObjSchema( all_schemas, schema_name);
         }
 
+        //If .fn was found, return result of the .fn and pass schema_args, otherwise return .obj
         const result = fn ? getFunctionResult(fn, schema_args) : obj;
-
-        //Set the schema setting to the result of the function
         return result;
     }
 
