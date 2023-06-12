@@ -4,7 +4,7 @@
 
 
 - Comments aligned indentation, dashes and capital letters, punctuation.
-  - FileIO
+  - ✔️ FileIO
   - SchemaManager
   - getFunctionResult
   - FileToSchemaConverter

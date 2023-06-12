@@ -15,7 +15,7 @@ import WriteModeEnum from '../types/WriteModeEnum';
 import FileToSchemaConverter from '../types/FileToSchemaConverter';
 
 /**
- * .js to schema converter function (FileToSchemaConverterFunction type)
+ * .js to schema converter function (FileToSchemaConverterFunction type).
  */
 const jsToSchema = async ( file_path: string, schema_name: string, fileIO: IFileIO ): Promise<FnSchema> => {
     const full_path = path.join (process.cwd(), file_path);
@@ -27,7 +27,7 @@ const jsToSchema = async ( file_path: string, schema_name: string, fileIO: IFile
 }
 
 /**
- * .json to schema converter function (FileToSchemaConverterFunction type)
+ * .json to schema converter function (FileToSchemaConverterFunction type).
  */
 const jsonToSchema = async ( file_path: string, schema_name: string, fileIO: IFileIO ): Promise<ObjSchema> => {
 
@@ -50,8 +50,8 @@ const jsonToSchema = async ( file_path: string, schema_name: string, fileIO: IFi
 
 /**
  * Schema manager constructor
- * @param { IFileIO } fileIO                                    - fileIO constructor to use. Default FileIO.
- * @param { FileToSchemaConverter[] } fileToSchemaConverters    - FileToSchemaConverters. Default uses js and json converters 
+ * @param { IFileIO }                 fileIO                    - FileIO constructor to use. Default FileIO.
+ * @param { FileToSchemaConverter[] } fileToSchemaConverters    - FileToSchemaConverters. Default uses js and json converters.
  */
 export default function SchemaManager(
     fileIO: IFileIO = new FileIO(),
@@ -97,11 +97,11 @@ export default function SchemaManager(
 
     /**
      * Get all schema files from the specified directory (non-recursive).
-     * Lists all files in directory that end with 'schema.(json|js)'
+     * Lists all files in directory that end with 'schema.(json|js)'.
      * 
-     * @param { string } schemas_dir_path path to schemas directory
+     * @param { string } schemas_dir_path Path to schemas directory.
      * 
-     * @returns { string[] } - array of schema filenames in specified directory
+     * @returns { string[] } - Array of schema filenames in specified directory.
      */
     this.getSchemaFiles = ( schemas_dir_path: string ): string[] => {
         //Get filenames and filter them, then store in var
@@ -112,12 +112,12 @@ export default function SchemaManager(
     }
 
     /**
-     * Write schema objects to .liquid files. Schemas must be resolved before running this function
+     * Write schema objects to .liquid files. Schemas must be resolved before running this function.
      * 
-     * @param { ObjSchema[] }   resolved_schemas    - array of resolved ObjSchema objects
-     * @param { string }        liquid_files_path   - path to liquid sections directory
+     * @param { ObjSchema[] }   resolved_schemas    - Array of resolved ObjSchema objects.
+     * @param { string }        liquid_files_path   - Path to liquid sections directory.
      * 
-     * @returns { boolean } true on success, throws error otherwise.
+     * @returns { boolean } True on success, throws error otherwise.
      */
     this.applySchemasToLiquid = ( resolved_schemas: ObjSchema[], liquid_files_path: string): boolean => {
 
@@ -147,14 +147,14 @@ export default function SchemaManager(
     }
 
     /**
-     * Write a single schema to a single liquid file. Schema must be resolved before running this function
+     * Write a single schema to a single liquid file. Schema must be resolved before running this function.
      * 
-     * @param { ObjSchema }     schema                          - schema to apply
-     * @param { string }        liquid_files_path               - path to liquid sections folder
-     * @param { string }        target_file                     - filename of the .liquid file to write to
-     * @param { WriteModeEnum } [ WriteModeEnum.OverwriteAll ]  - write mode. See WriteModeEnum comments
+     * @param { ObjSchema }     schema                          - Schema to apply.
+     * @param { string }        liquid_files_path               - Path to liquid sections folder.
+     * @param { string }        target_file                     - Filename of the .liquid file to write to.
+     * @param { WriteModeEnum } [ WriteModeEnum.OverwriteAll ]  - Write mode. See WriteModeEnum docs.
      * 
-     * @return { boolean } - true on success, throws error on failure
+     * @return { boolean } - True on success, throws error on failure.
      */
     this.applySchemaToLiquidFile = ( schema: ObjSchema, liquid_files_path: string, target_file: string, mode: WriteModeEnum = WriteModeEnum.OverwriteAll): boolean => {
 
@@ -182,12 +182,12 @@ export default function SchemaManager(
     }
 
     /**
-     * Get the function of a specific FnSchema
+     * Get the function of a specific FnSchema.
      * 
-     * @param { SchemasList } all_schemas   - All schemas
-     * @param { string } schema_name        - Name of schema for which to find function
+     * @param { SchemasList }   all_schemas - All schemas.
+     * @param { string }        schema_name - Name of schema for which to find function.
      * 
-     * @returns { Function | null } - function of found schema, or null if either schema or function was not found.
+     * @returns { Function | null } - Function of found schema, or null if either schema or function was not found.
      */
     this.getFunctionFromFnSchema = (all_schemas: SchemasList, schema_name: string): Function | null => {
         //Get schema by name from list of all schemas
@@ -203,12 +203,12 @@ export default function SchemaManager(
     }
 
     /**
-     * Get the obj of a specific ObjSchema
+     * Get the obj of a specific ObjSchema.
      * 
-     * @param { SchemasList } all_schemas   - All schemas
-     * @param { string } schema_name        - Name of schema for which to find the object
+     * @param { SchemasList }   all_schemas - All schemas.
+     * @param { string }        schema_name - Name of schema for which to find the object.
      * 
-     * @returns { GenericObject | null } - object of found schema, or null if either schema or object was not found.
+     * @returns { GenericObject | null } - Object of found schema, or null if either schema or object was not found.
      */
     this.getObjFromObjSchema = (all_schemas: SchemasList, schema_name: string): GenericObject | null => {
 
@@ -227,13 +227,13 @@ export default function SchemaManager(
     }
 
     /**
-     * Parse schema, meaning return the .obj of schema if it's a ObjSchema, and result of .fn of schema if it's a FnSchema
+     * Parse schema, meaning return the .obj of schema if it's a ObjSchema, and result of .fn of schema if it's a FnSchema.
      * 
-     * @param { SchemasList }   all_schemas - List of all schemas
-     * @param { string }        schema_name - Name of schema to parse
-     * @param { any[] }         schema_args - Arguments for schema, if any
+     * @param { SchemasList }   all_schemas - List of all schemas.
+     * @param { string }        schema_name - Name of schema to parse.
+     * @param { any[] }         schema_args - Arguments for schema, if any.
      * 
-     * @returns { GenericObject } - parsed schema .obj or result of .fn
+     * @returns { GenericObject } - Parsed schema .obj or result of .fn.
      */
     this.parseSchema = (all_schemas: SchemasList, schema_name: string, schema_args: any[]): GenericObject => {
 
@@ -251,11 +251,11 @@ export default function SchemaManager(
     }
 
     /**
-     * Resolve schemas, meaning that schema's dependency references will be replaced by the values of the dependecies
+     * Resolve schemas, meaning that schema's dependency references will be replaced by the values of the dependecies.
      * 
-     * @param { SchemasList } schemas_list  - List of all schemas
+     * @param { SchemasList } schemas_list  - List of all schemas.
      * 
-     * @return { ObjSchema[] }  - Resolved schemas as an array of ObjSchemas
+     * @return { ObjSchema[] }  - Resolved schemas as an array of ObjSchemas.
      */
     this.resolveSchemas = ( schemas_list: SchemasList ): ObjSchema[] => {
 
@@ -326,10 +326,10 @@ export default function SchemaManager(
     /**
      * Create a SchemasList object from schema files list.
      * 
-     * @param { string }    schemas_path    - Path to schemas folder
-     * @param { string[] }  filenames       - Array of schema filenames
+     * @param { string }    schemas_path    - Path to schemas folder.
+     * @param { string[] }  filenames       - Array of schema filenames.
      * 
-     * @returns { Promise<SchemasList> }    - Promise that resolves to a SchemasList
+     * @returns { Promise<SchemasList> }    - Promise that resolves to a SchemasList.
      */
     this.schemaFilesToSchemasList = async ( schemas_path: string, filenames: string[]): Promise<SchemasList> => {
 
@@ -361,11 +361,11 @@ export default function SchemaManager(
     }
 
     /**
-     * Get Schema object from file
+     * Get Schema object from file.
      * 
-     * @param { string } file_path - Filename
+     * @param { string } file_path - Filename.
      * 
-     * @return { Promise<Schema> } - Resolves to a Schema object
+     * @return { Promise<Schema> } - Resolves to a Schema object.
      */
     this.schemaFileToObj = async ( file_path: string): Promise<Schema> => {
 
