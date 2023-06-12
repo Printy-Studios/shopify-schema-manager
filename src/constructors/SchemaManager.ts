@@ -323,25 +323,39 @@ export default function SchemaManager(
         return obj_schemas;
     }
 
+    /**
+     * Create a SchemasList object from schema files list.
+     * 
+     * @param { string }    schemas_path    - Path to schemas folder
+     * @param { string[] }  filenames       - Array of schema filenames
+     * 
+     * @returns { Promise<SchemasList> }    - Promise that resolves to a SchemasList
+     */
     this.schemaFilesToSchemasList = async ( schemas_path: string, filenames: string[]): Promise<SchemasList> => {
 
+        //Create empty object for output
         let output: SchemasList = {
             fn: [],
             obj: []
         }
 
 
+        //Iterate on all filenames
         for ( const filename of filenames) {
 
+            //Convert schema file to a Schema object
             const schema_obj = await this.schemaFileToObj( path.join( schemas_path, filename ) );
             if ( schema_obj.fn ) {
+                //If Schema object is a FnSchema, push to 'fn'
                 output.fn.push( schema_obj );
             } else if ( schema_obj.obj ) {
+                //If Schema object is an ObjSchema, push to 'obj
                 output.obj.push( schema_obj );
             }
             
         }
 
+        //Resolve with the SchemasList
         return await Promise.resolve(output);
 
     }
