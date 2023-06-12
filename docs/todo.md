@@ -10,7 +10,7 @@
   - ✔️ WriteModeEnum
   - ✔️ FileToSchemaConverter
 
-- Comments aligned indent and dashes
+- Comments aligned indentation, dashes and capital letters
   - FileIO
   - SchemaManager
   - getFunctionResult

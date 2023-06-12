@@ -181,13 +181,24 @@ export default function SchemaManager(
             
     }
 
-    this.getFunctionFromFnSchema = (all_schemas: SchemasList, schema_name: string) => {
+    /**
+     * Get the function of a specific FnSchema
+     * 
+     * @param { SchemasList } all_schemas   - All schemas
+     * @param { string } schema_name        - Name of schema for which to find function
+     * 
+     * @returns { Function | null } - function of found schema, or null if either schema or function was not found.
+     */
+    this.getFunctionFromFnSchema = (all_schemas: SchemasList, schema_name: string): Function | null => {
+        //Get schema by name from list of all schemas
         const target_schema = all_schemas.fn.find( schema => schema_name == schema.name);
 
+        //If schema not found, or function in schema not found, return null
         if ( target_schema == undefined || target_schema.fn == undefined ) {
             return null;
         }
 
+        //Otherwise, return found function
         return target_schema.fn;
     }
 
