@@ -8,9 +8,9 @@
   - ✔️ SchemaManager
   - ✔️ getFunctionResult
   - ✔️ FileToSchemaConverter
-  - IFileIO
-  - MiscTypes
-  - Schema
+  - ✔️ IFileIO
+  - ✔️ MiscTypes
+  - ✔️ Schema
   - WriteModeEnum 
 
 - Rename 'liquid_files_path' variables to 'liquid_sections_path' to be more precise and descriptive

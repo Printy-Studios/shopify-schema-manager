@@ -1,9 +1,9 @@
 /**
  * Write mode.
  * 
- * @param OverwriteAll - overwrite completely
- * @param OverwriteSome - overwrite where necessary
- * @param Append - only append, don't overwrite
+ * @param OverwriteAll  - Overwrite completely.
+ * @param OverwriteSome - Overwrite where necessary.
+ * @param Append        - Only append, don't overwrite.
  */
 enum WriteModeEnum {
     OverwriteAll = 'overwrite_all',
