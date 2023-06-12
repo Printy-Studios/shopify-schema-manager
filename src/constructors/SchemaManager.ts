@@ -14,6 +14,9 @@ import { GenericObject } from '../types/MiscTypes';
 import WriteModeEnum from '../types/WriteModeEnum';
 import FileToSchemaConverter from '../types/FileToSchemaConverter';
 
+/**
+ * .js to schema converter function (FileToSchemaConverterFunction type)
+ */
 const jsToSchema = async ( file_path: string, schema_name: string, fileIO: IFileIO ): Promise<FnSchema> => {
     const full_path = path.join (process.cwd(), file_path);
 
@@ -23,6 +26,9 @@ const jsToSchema = async ( file_path: string, schema_name: string, fileIO: IFile
     }
 }
 
+/**
+ * .json to schema converter function (FileToSchemaConverterFunction type)
+ */
 const jsonToSchema = async ( file_path: string, schema_name: string, fileIO: IFileIO ): Promise<ObjSchema> => {
 
     let json_str: string = fileIO.readFile( file_path );
@@ -42,6 +48,11 @@ const jsonToSchema = async ( file_path: string, schema_name: string, fileIO: IFi
     return await Promise.resolve( output );
 }
 
+/**
+ * Schema manager constructor
+ * @param { IFileIO } fileIO                                    - fileIO constructor to use. Default FileIO.
+ * @param { FileToSchemaConverter[] } fileToSchemaConverters    - FileToSchemaConverters. Default uses js and json converters 
+ */
 export default function SchemaManager(
     fileIO: IFileIO = new FileIO(),
     fileToSchemaConverters: FileToSchemaConverter[] = [
@@ -58,32 +69,51 @@ export default function SchemaManager(
     ]
 ) {
 
+    //Main function that runs the script, parses the schema files and applies them to .liquid files
     this.run = async ( schemas_path: string, liquid_path: string) => {
 
         console.log("Running Shopify Schema Manager")
 
+        //Get all schema files from path
         const schema_files = this.getSchemaFiles( schemas_path );
 
         console.log(`Found ${ schema_files.length } schema files`);
         console.log(schema_files);
 
+        //Create a SchemasList object from retrieved schema files
         const schemas_list: SchemasList = await this.schemaFilesToSchemasList( schemas_path, schema_files );
 
+        //Apply schemas to each other ( meaning resolve schema dependencies, basically ) and store them in a var
         const applied_schemas: ObjSchema[] = this.applySchemasToSchemas( schemas_list );
 
         console.log( 'Applying schemas to .liquid files' );
 
+        //Write schemas to .liquid files
         this.applySchemasToLiquid( applied_schemas, liquid_path );
     };
 
+    //FileIO object to be used in methods
     this.fileIO = fileIO;
 
+    /**
+     * Get all schema files from the specified directory (non-recursive).
+     * Lists all files in directory that end with 'schema.(json|js)'
+     * 
+     * @param { string } schemas_dir_path path to schemas directory
+     * 
+     * @returns { string[] } - array of schema filenames in specified directory
+     */
     this.getSchemaFiles = ( schemas_dir_path: string ): string[] => {
+        //Get filenames and filter them, then store in var
         const filenames = this.fileIO.readDir( schemas_dir_path, ( filename ) => filename.endsWith( '-schema.json' ) || filename.endsWith( '-schema.js' ))
 
+        //Return the filtered filenames
         return filenames;
     }
 
+    /**
+     * Write schema objects to .liquid files
+     */
     this.applySchemasToLiquid = ( parsed_schemas: ObjSchema[], liquid_files_path: string) => {
 
 
