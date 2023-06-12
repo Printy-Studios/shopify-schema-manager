@@ -202,15 +202,27 @@ export default function SchemaManager(
         return target_schema.fn;
     }
 
-    this.getObjFromObjSchema = (all_schemas: SchemasList, schema_name: string) => {
+    /**
+     * Get the obj of a specific ObjSchema
+     * 
+     * @param { SchemasList } all_schemas   - All schemas
+     * @param { string } schema_name        - Name of schema for which to find the object
+     * 
+     * @returns { GenericObject | null } - object of found schema, or null if either schema or object was not found.
+     */
+    this.getObjFromObjSchema = (all_schemas: SchemasList, schema_name: string): GenericObject | null => {
+
+        //Get schema by name from list of all schemas
         const target_schema = all_schemas.obj.find( schema => schema_name == schema.name);
 
+        //If schema or schema.obj was not found, throw error
         if ( target_schema == undefined ) {
             throw new Error(`Could not find schema ${ schema_name }.json`);
         } else if ( target_schema.obj == undefined ) {
             throw new Error(`Could not find obj in ${ schema_name }.json`);
         }
 
+        //Otherwise, return the schema.obj
         return target_schema.obj;
     }
 
