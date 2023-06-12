@@ -128,17 +128,21 @@ export default function SchemaManager(
         //Filter only those schemas that have a 'for' property
         const schemas: ObjSchema[] = resolved_schemas.filter( schema => schema.for && typeof schema.for == 'string' );
 
-
+        //Loop through filtered schemas
         for ( const schema of schemas ) {
 
+            //Get target liquid filename according to `schema.for` property 
             const target_file = schema.for + ".liquid";
 
+            //If such a file exists
             if( all_liquid_files.includes( target_file ) ) {
+                //Write the schema into this file
                 this.applySchemaToLiquidFile(schema, liquid_files_path, target_file);
             }
 
         }
 
+        //Return true on success
         return true;
     }
 
