@@ -10,7 +10,7 @@
   - ✔️ WriteModeEnum
   - ✔️ FileToSchemaConverter
 
-- Comments aligned indent
+- Comments aligned indent and dashes
   - FileIO
   - SchemaManager
   - getFunctionResult
@@ -19,6 +19,8 @@
   - MiscTypes
   - Schema
   - WriteModeEnum 
+
+- Rename 'liquid_files_path' variables to 'liquid_sections_path' to be more precise and descriptive
 
 - **[10%]** Error checking
   - FileIO

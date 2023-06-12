@@ -146,25 +146,37 @@ export default function SchemaManager(
         return true;
     }
 
-    this.applySchemaToLiquidFile = ( schema: ObjSchema, liquid_files_path: string, target_file: string, mode: WriteModeEnum = WriteModeEnum.OverwriteAll) => {
+    /**
+     * Write a single schema to a single liquid file. Schema must be resolved before running this function
+     * 
+     * @param { ObjSchema }     schema                          - schema to apply
+     * @param { string }        liquid_files_path               - path to liquid sections folder
+     * @param { string }        target_file                     - filename of the .liquid file to write to
+     * @param { WriteModeEnum } [ WriteModeEnum.OverwriteAll ]  - write mode. See WriteModeEnum comments
+     * 
+     * @return { boolean } - true on success, throws error on failure
+     */
+    this.applySchemaToLiquidFile = ( schema: ObjSchema, liquid_files_path: string, target_file: string, mode: WriteModeEnum = WriteModeEnum.OverwriteAll): boolean => {
 
         console.log('modifying ' + target_file );
+        //Get full path to file
         const full_path = path.join( liquid_files_path, target_file );
-        
-        let file_contents = this.fileIO.readFile( full_path );
+
 
         if ( mode == WriteModeEnum.OverwriteAll ) {
+            //If mode is OverwriteAll
 
-            
-
+            //Make a liquid schema string from schema.obj 
             const schema_output = '{% schema %}\n' +
             JSON.stringify(schema.obj, null, 2) + '\n' +
             '{% endschema %}';
 
+            //Replace the current .liquid file's schema with the new schema
             this.fileIO.replaceInFile(/{%\s*schema\s*%}.*{%\s*endschema\s*%}/gs, schema_output, full_path)
         }
         
-
+        //Return true on success
+        return true;
         
             
     }
