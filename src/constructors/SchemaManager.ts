@@ -83,13 +83,13 @@ export default function SchemaManager(
         //Create a SchemasList object from retrieved schema files
         const schemas_list: SchemasList = await this.schemaFilesToSchemasList( schemas_path, schema_files );
 
-        //Apply schemas to each other ( meaning resolve schema dependencies, basically ) and store them in a var
-        const applied_schemas: ObjSchema[] = this.applySchemasToSchemas( schemas_list );
+        //Resolve schemas and store resolved schemas in a var
+        const resolved_schemas: ObjSchema[] = this.resolveSchemas( schemas_list );
 
         console.log( 'Applying schemas to .liquid files' );
 
         //Write schemas to .liquid files
-        this.applySchemasToLiquid( applied_schemas, liquid_path );
+        this.applySchemasToLiquid( resolved_schemas, liquid_path );
     };
 
     //FileIO object to be used in methods
@@ -112,15 +112,21 @@ export default function SchemaManager(
     }
 
     /**
-     * Write schema objects to .liquid files
+     * Write schema objects to .liquid files. Schemas must be resolved before running this function
+     * 
+     * @param { ObjSchema[] }   resolved_schemas    - array of resolved ObjSchema objects
+     * @param { string }        liquid_files_path   - path to liquid sections directory
+     * 
+     * @returns { boolean } true on success, throws error otherwise.
      */
-    this.applySchemasToLiquid = ( parsed_schemas: ObjSchema[], liquid_files_path: string) => {
+    this.applySchemasToLiquid = ( resolved_schemas: ObjSchema[], liquid_files_path: string): boolean => {
 
 
-        const all_liquid_files = this.fileIO.readDir( liquid_files_path );
+        //Get all liquid files in specified directory
+        const all_liquid_files = this.fileIO.readDir( liquid_files_path, ( filename: string ) => filename.endsWith('.liquid') );
 
         //Filter only those schemas that have a 'for' property
-        const schemas: ObjSchema[] = parsed_schemas.filter( schema => schema.for && typeof schema.for == 'string' );
+        const schemas: ObjSchema[] = resolved_schemas.filter( schema => schema.for && typeof schema.for == 'string' );
 
 
         for ( const schema of schemas ) {
@@ -132,6 +138,8 @@ export default function SchemaManager(
             }
 
         }
+
+        return true;
     }
 
     this.applySchemaToLiquidFile = ( schema: ObjSchema, liquid_files_path: string, target_file: string, mode: WriteModeEnum = WriteModeEnum.OverwriteAll) => {
@@ -194,7 +202,7 @@ export default function SchemaManager(
         return result;
     }
 
-    this.applySchemasToSchemas = ( schemas_list: SchemasList ): ObjSchema[] => {
+    this.resolveSchemas = ( schemas_list: SchemasList ): ObjSchema[] => {
 
         const obj_schemas = schemas_list.obj;
 
