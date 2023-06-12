@@ -6,8 +6,8 @@
 - Comments aligned indentation, dashes and capital letters, punctuation.
   - ✔️ FileIO
   - ✔️ SchemaManager
-  - getFunctionResult
-  - FileToSchemaConverter
+  - ✔️ getFunctionResult
+  - ✔️ FileToSchemaConverter
   - IFileIO
   - MiscTypes
   - Schema
