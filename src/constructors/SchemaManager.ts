@@ -14,14 +14,6 @@ import { GenericObject } from '../types/MiscTypes';
 import WriteModeEnum from '../types/WriteModeEnum';
 import FileToSchemaConverter from '../types/FileToSchemaConverter';
 
-
-
-
-
-
-
-
-
 const jsToSchema = async ( file_path: string, schema_name: string, fileIO: IFileIO ): Promise<FnSchema> => {
     const full_path = path.join (process.cwd(), file_path);
 
