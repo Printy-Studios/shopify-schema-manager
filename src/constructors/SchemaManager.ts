@@ -250,11 +250,18 @@ export default function SchemaManager(
         return result;
     }
 
+    /**
+     * Resolve schemas, meaning that schema's dependency references will be replaced by the values of the dependecies
+     * 
+     * @param { SchemasList } schemas_list  - List of all schemas
+     * 
+     * @return { ObjSchema[] }  - Resolved schemas as an array of ObjSchemas
+     */
     this.resolveSchemas = ( schemas_list: SchemasList ): ObjSchema[] => {
 
         const obj_schemas = schemas_list.obj;
 
-        //Iterate through each json schema
+        //Iterate through each obj schema
         for ( let obj_schema of obj_schemas ) {
 
             const schema = obj_schema.obj;
@@ -268,7 +275,8 @@ export default function SchemaManager(
                     const setting = schema.settings[setting_key];
                     if( setting.from && typeof setting.from === 'string' ) {
 
-
+                        //If setting has a 'from' property, resolve the dependency and replace the setting
+                        //with the schema that has the name of the 'from' property
                         const parsed_setting = this.parseSchema(schemas_list, setting.from, setting.args);
                         obj_schema.obj.settings[setting_key] = parsed_setting;
 
@@ -283,7 +291,7 @@ export default function SchemaManager(
 
                     //Check if block has a 'from' property
                     if ( block.from && typeof block.from == 'string' ) {
-                        //If yes, apply the function that corresponds to the 'from' property's value
+                        //If yes, apply the schema which's name corresponds to the 'from' property's value
                         const parsed_schema = this.parseSchema( schemas_list, block.from, block.args);
 
                         block = parsed_schema;
@@ -296,6 +304,7 @@ export default function SchemaManager(
                             const setting = block.settings[ setting_key ];
                             if( setting.from && typeof setting.from == 'string' ) {
                                 
+                                //If yes, apply the schema which's name corresponds to the 'from' property's value
                                 const parsed_setting = this.parseSchema( schemas_list, setting.from, setting.args );
 
                                 //Set the schema setting to the result of the function
@@ -303,12 +312,14 @@ export default function SchemaManager(
                             } 
                         }
                     }
-
+                    
+                    //Set the block's value to the resolved block
                     obj_schema.obj.blocks[ block_key ] = block;
                 }
             }
         }
 
+        //Return all schemas, now resolved.
         return obj_schemas;
     }
 
