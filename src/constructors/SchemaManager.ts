@@ -14,6 +14,7 @@ import { GenericObject } from '../types/MiscTypes';
 import WriteModeEnum from '../types/WriteModeEnum';
 import FileToSchemaConverter from '../types/FileToSchemaConverter';
 import validateFileIO from '../functions/validateFileIO';
+import validateType from '../functions/validateType';
 
 /**
  * .js to schema converter function (FileToSchemaConverterFunction type).
@@ -90,10 +91,17 @@ export default function SchemaManager(
     //Main function that runs the script, parses the schema files and applies them to .liquid files
     this.run = async ( schemas_path: string, liquid_path: string) => {
 
+        validateType( schemas_path, 'schemas_path', 'string' );
+
         console.log("Running Shopify Schema Manager")
 
         //Get all schema files from path
         const schema_files = this.getSchemaFiles( schemas_path );
+
+        if ( schema_files.length == 0 ) {
+            console.log(`Didn't find any schema files, stopping`);
+            return false;
+        }
 
         console.log(`Found ${ schema_files.length } schema files`);
         console.log(schema_files);
