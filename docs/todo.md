@@ -10,6 +10,7 @@
 - **[10%]** Error checking
   - FileIO
   - SchemaManager
+  - getFunctionResult
 
 - Schema validation
 - Move types to `types` folder
