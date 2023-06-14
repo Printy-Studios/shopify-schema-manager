@@ -56,6 +56,12 @@ export default function FileIO() {
      */
     this.readDir = ( path: string, filterFn?: ( filename: string ) => string[]): string[] => {
 
+        if ( typeof path != 'string' ) {
+            throw new TypeError( "'path' argument must be a string" );
+        } if ( filterFn && ! ( filterFn instanceof Function ) ) {
+            throw new TypeError( "'filterFn' argument must be a function!")
+        }
+
         //Get all files in specified directory
         let all_files = fs.readdirSync( path );
 
