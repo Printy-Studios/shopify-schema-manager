@@ -6,7 +6,7 @@ import * as fs from 'fs';
  * you can pass one as a parameter to the SchemaManager constructor. You must then implement in your custom fileIO
  * all the methods that are present in this FileIO.
  */
-export default function FileIO() {
+function FileIO() {
 
     /**
      * Replace a regex match in a file with a string.
@@ -89,3 +89,5 @@ export default function FileIO() {
     }
 
 }
+
+export default FileIO;

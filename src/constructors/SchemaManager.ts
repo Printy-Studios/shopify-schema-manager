@@ -20,7 +20,6 @@ import validateFileIO from '../functions/validateFileIO';
  */
 const jsToSchema = async ( file_path: string, schema_name: string, fileIO: IFileIO ): Promise<FnSchema> => {
 
-
     //Error checking
     if ( typeof file_path != 'string' ) {
         throw new TypeError( "'file_path' argument must be a string" );
@@ -42,6 +41,14 @@ const jsToSchema = async ( file_path: string, schema_name: string, fileIO: IFile
  */
 const jsonToSchema = async ( file_path: string, schema_name: string, fileIO: IFileIO ): Promise<ObjSchema> => {
 
+    //Error checking
+    if ( typeof file_path != 'string' ) {
+        throw new TypeError( "'file_path' argument must be a string" );
+    } if ( typeof schema_name != 'string' ) {
+        throw new TypeError( "'schema_name' argument must be a string");
+    }
+    validateFileIO( fileIO );
+
     let json_str: string = fileIO.readFile( file_path );
     let obj = JSON.parse( json_str );
     const obj_for: string = obj.for;
@@ -49,7 +56,7 @@ const jsonToSchema = async ( file_path: string, schema_name: string, fileIO: IFi
 
     let output: ObjSchema = {
         name: schema_name,
-        obj: obj
+        obj: obj,
     };
 
     if ( obj_for ) {
