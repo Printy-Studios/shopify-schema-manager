@@ -82,6 +82,11 @@ export default function FileIO() {
      * @returns { string } - Contents of file as string
      */
     this.readFile = ( path: string ): string => {
+
+        if ( typeof path != 'string' ) {
+            throw new TypeError( "'path' argument must be a string" );
+        }
+
         return fs.readFileSync( path ).toString();
     }
 
