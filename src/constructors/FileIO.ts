@@ -22,11 +22,9 @@ export default function FileIO() {
         //Error checking
         if( ! ( regex instanceof RegExp ) ) {
             throw new TypeError( "'regex' param must be a RegExp object" )
-        } 
-        if( typeof replacement != 'string' ) {
+        } if( typeof replacement != 'string' ) {
             throw new TypeError( "'replacement' param must be a string" );
-        }
-        if( typeof file_path != 'string' ) {
+        } if( typeof file_path != 'string' ) {
             throw new TypeError( "'file_path' param must be a string" );
         }
 

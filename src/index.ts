@@ -7,10 +7,6 @@ import FileIO from './constructors/FileIO';
 //Types
 import WriteModeEnum from './types/WriteModeEnum';
 
-const fileIO = new FileIO();
-
-fileIO.replaceInFile()
-
 const test = true;
 
 const schemas_dir = test ? './example/schema' : './schema';

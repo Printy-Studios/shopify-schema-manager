@@ -13,11 +13,22 @@ import { Schema, FnSchema, ObjSchema, SchemasList } from '../types/Schema';
 import { GenericObject } from '../types/MiscTypes';
 import WriteModeEnum from '../types/WriteModeEnum';
 import FileToSchemaConverter from '../types/FileToSchemaConverter';
+import validateFileIO from '../functions/validateFileIO';
 
 /**
  * .js to schema converter function (FileToSchemaConverterFunction type).
  */
 const jsToSchema = async ( file_path: string, schema_name: string, fileIO: IFileIO ): Promise<FnSchema> => {
+
+
+    //Error checking
+    if ( typeof file_path != 'string' ) {
+        throw new TypeError( "'file_path' argument must be a string" );
+    } if ( typeof schema_name != 'string' ) {
+        throw new TypeError( "'schema_name' argument must be a string");
+    }
+    validateFileIO( fileIO );
+
     const full_path = path.join (process.cwd(), file_path);
 
     return {
