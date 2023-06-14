@@ -12,6 +12,8 @@
   - SchemaManager
   - getFunctionResult
 
+- **[0%]** Tests
+
 - Schema validation
 - Move types to `types` folder
 

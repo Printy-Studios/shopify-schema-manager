@@ -18,6 +18,18 @@ export default function FileIO() {
      * @returns { boolean } - True if regex was found and replaced, false if regex wasn't found.
      */
     this.replaceInFile = ( regex: RegExp, replacement: string, file_path: string ): boolean => {
+
+        //Error checking
+        if( ! ( regex instanceof RegExp ) ) {
+            throw new TypeError( "'regex' param must be a RegExp object" )
+        } 
+        if( typeof replacement != 'string' ) {
+            throw new TypeError( "'replacement' param must be a string" );
+        }
+        if( typeof file_path != 'string' ) {
+            throw new TypeError( "'file_path' param must be a string" );
+        }
+
         //Get contents of file as string
         let file_contents = fs.readFileSync( file_path ).toString();
 
