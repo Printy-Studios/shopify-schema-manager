@@ -1,78 +1,9 @@
-//Core
-import * as path from 'path';
-
-//Constructors
-import FileIO from './FileIO'
-
-//Functions
-import getFunctionResult from '../functions/getFunctionResult';
-
-//Types
-import IFileIO from '../types/IFileIO';
-import { Schema, FnSchema, ObjSchema, SchemasList } from '../types/Schema';
-import { GenericObject } from '../types/MiscTypes';
-import WriteModeEnum from '../types/WriteModeEnum';
-import FileToSchemaConverter from '../types/FileToSchemaConverter';
-import validateFileIO from '../functions/validateFileIO';
-import validateType from '../functions/validateType';
-
-/**
- * .js to schema converter function (FileToSchemaConverterFunction type).
- */
-const jsToSchema = async ( file_path: string, schema_name: string, fileIO: IFileIO ): Promise<FnSchema> => {
-
-    //Error checking
-    if ( typeof file_path != 'string' ) {
-        throw new TypeError( "'file_path' argument must be a string" );
-    } if ( typeof schema_name != 'string' ) {
-        throw new TypeError( "'schema_name' argument must be a string");
-    }
-    validateFileIO( fileIO );
-
-    const full_path = path.join (process.cwd(), file_path);
-
-    return {
-        name: schema_name,
-        fn: await import( full_path )
-    }
-}
-
-/**
- * .json to schema converter function (FileToSchemaConverterFunction type).
- */
-const jsonToSchema = async ( file_path: string, schema_name: string, fileIO: IFileIO ): Promise<ObjSchema> => {
-
-    //Error checking
-    if ( typeof file_path != 'string' ) {
-        throw new TypeError( "'file_path' argument must be a string" );
-    } if ( typeof schema_name != 'string' ) {
-        throw new TypeError( "'schema_name' argument must be a string");
-    }
-    validateFileIO( fileIO );
-
-    let json_str: string = fileIO.readFile( file_path );
-    let obj = JSON.parse( json_str );
-    const obj_for: string = obj.for;
-    delete obj.for;
-
-    let output: ObjSchema = {
-        name: schema_name,
-        obj: obj,
-    };
-
-    if ( obj_for ) {
-        output.for = obj_for;
-    }
-
-    return await Promise.resolve( output );
-}
-
 /**
  * Schema manager constructor
  * @param { IFileIO }                 fileIO                    - FileIO constructor to use. Default FileIO.
  * @param { FileToSchemaConverter[] } fileToSchemaConverters    - FileToSchemaConverters. Default uses js and json converters.
  */
-export default function SchemaManager(
+ export default function SchemaManager(
     fileIO: IFileIO = new FileIO(),
     fileToSchemaConverters: FileToSchemaConverter[] = [
         {
@@ -167,6 +98,8 @@ export default function SchemaManager(
 
         //Get all liquid files in specified directory
         const all_liquid_files = this.fileIO.readDir( liquid_sections_path, ( filename: string ) => filename.endsWith('.liquid') );
+
+        console.log('all liquid files: ', all_liquid_files);
 
         if ( all_liquid_files.length == 0 ) {
             console.log( `Didn't find any liquid files, stopping...` );
@@ -456,6 +389,95 @@ export default function SchemaManager(
         //Return result
         return output;
         
+    }
+
+}
+
+/**
+ * This is a fairly generic file IO constructor that uses the fs module. If you want to implement your own FileIO,
+ * you can pass one as a parameter to the SchemaManager constructor. You must then implement in your custom fileIO
+ * all the methods that are present in this FileIO.
+ */
+ function FileIO() {
+
+    /**
+     * Replace a regex match in a file with a string.
+     * 
+     * @param { RegExp } regex          - Regex to search for.
+     * @param { string } replacement    - String to replace with.
+     * @param { string } file_path      - Path to file.
+     * 
+     * @returns { boolean } - True if regex was found and replaced, false if regex wasn't found.
+     */
+    this.replaceInFile = ( regex: RegExp, replacement: string, file_path: string ): boolean => {
+
+        //Error checking
+        if( ! ( regex instanceof RegExp ) ) {
+            throw new TypeError( "'regex' param must be a RegExp object" )
+        } if( typeof replacement != 'string' ) {
+            throw new TypeError( "'replacement' param must be a string" );
+        } if( typeof file_path != 'string' ) {
+            throw new TypeError( "'file_path' param must be a string" );
+        }
+
+        //Get contents of file as string
+        let file_contents = fs.readFileSync( file_path ).toString();
+
+        //Replace string that matches regex and store new string
+        const new_file_contents = file_contents.replace( regex, replacement);
+
+        //If there wasn't any replacement, return false 
+        if ( file_contents == new_file_contents ) {
+            return false;
+        }
+
+        //Otherwise, write the new string to file and return true
+        fs.writeFileSync(file_path, file_contents);
+        return true;
+    }
+
+    /**
+     * Output contents of a directory (non-recursively).
+     * 
+     * @param { string }    path        - Path to directory.
+     * @param { function }  [filterFn]  - Optional filter function that will be applied with Array.prototype.filter to the results.
+     * 
+     * @returns { string[] } - Array of file/directory names
+     */
+    this.readDir = ( path: string, filterFn?: ( filename: string ) => string[]): string[] => {
+
+        if ( typeof path != 'string' ) {
+            throw new TypeError( "'path' argument must be a string" );
+        } if ( filterFn && ! ( filterFn instanceof Function ) ) {
+            throw new TypeError( "'filterFn' argument must be a function!")
+        }
+
+        //Get all files in specified directory
+        let all_files = fs.readdirSync( path );
+
+        //If filter function is passed, filter all found files according to it
+        if ( filterFn ) {
+            all_files = all_files.filter( filename => filterFn );
+        }
+
+        //Return (possibly filtered) list of files in directory
+        return all_files;
+    }
+
+    /**
+     * Output contents of a file as string.
+     * 
+     * @param { string } path - Path to file.
+     * 
+     * @returns { string } - Contents of file as string
+     */
+    this.readFile = ( path: string ): string => {
+
+        if ( typeof path != 'string' ) {
+            throw new TypeError( "'path' argument must be a string" );
+        }
+
+        return fs.readFileSync( path ).toString();
     }
 
 }
