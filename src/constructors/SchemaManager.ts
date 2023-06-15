@@ -396,6 +396,8 @@ export default function SchemaManager(
      */
     this.schemaFilesToSchemasList = async ( schemas_path: string, filenames: string[]): Promise<SchemasList> => {
 
+        validateType( schemas_path, 'schemas_path', 'string' );
+
         //Create empty object for output
         let output: SchemasList = {
             fn: [],
@@ -431,6 +433,8 @@ export default function SchemaManager(
      * @return { Promise<Schema> } - Resolves to a Schema object.
      */
     this.schemaFileToObj = async ( file_path: string): Promise<Schema> => {
+
+        validateType( file_path, 'file_path', 'string' );
 
         //Get extension of the file from filename
         const file_ext = path.extname( file_path );
