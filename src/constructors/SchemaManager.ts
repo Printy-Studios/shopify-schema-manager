@@ -158,8 +158,16 @@ export default function SchemaManager(
         //Get all liquid files in specified directory
         const all_liquid_files = this.fileIO.readDir( liquid_sections_path, ( filename: string ) => filename.endsWith('.liquid') );
 
+        if ( all_liquid_files.length == 0 ) {
+            console.log( `Didn't find any liquid files, stopping...` );
+        }
+
         //Filter only those schemas that have a 'for' property
         const schemas: ObjSchema[] = resolved_schemas.filter( schema => schema.for && typeof schema.for == 'string' );
+
+        if ( schemas.length == 0 ) {
+            console.log( `Didn't find any schemas with a 'for' property, stopping...` );
+        }
 
         //Loop through filtered schemas
         for ( const schema of schemas ) {
