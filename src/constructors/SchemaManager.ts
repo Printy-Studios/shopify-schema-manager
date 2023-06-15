@@ -13,11 +13,22 @@ import { Schema, FnSchema, ObjSchema, SchemasList } from '../types/Schema';
 import { GenericObject } from '../types/MiscTypes';
 import WriteModeEnum from '../types/WriteModeEnum';
 import FileToSchemaConverter from '../types/FileToSchemaConverter';
+import validateFileIO from '../functions/validateFileIO';
+import validateType from '../functions/validateType';
 
 /**
  * .js to schema converter function (FileToSchemaConverterFunction type).
  */
 const jsToSchema = async ( file_path: string, schema_name: string, fileIO: IFileIO ): Promise<FnSchema> => {
+
+    //Error checking
+    if ( typeof file_path != 'string' ) {
+        throw new TypeError( "'file_path' argument must be a string" );
+    } if ( typeof schema_name != 'string' ) {
+        throw new TypeError( "'schema_name' argument must be a string");
+    }
+    validateFileIO( fileIO );
+
     const full_path = path.join (process.cwd(), file_path);
 
     return {
@@ -31,6 +42,14 @@ const jsToSchema = async ( file_path: string, schema_name: string, fileIO: IFile
  */
 const jsonToSchema = async ( file_path: string, schema_name: string, fileIO: IFileIO ): Promise<ObjSchema> => {
 
+    //Error checking
+    if ( typeof file_path != 'string' ) {
+        throw new TypeError( "'file_path' argument must be a string" );
+    } if ( typeof schema_name != 'string' ) {
+        throw new TypeError( "'schema_name' argument must be a string");
+    }
+    validateFileIO( fileIO );
+
     let json_str: string = fileIO.readFile( file_path );
     let obj = JSON.parse( json_str );
     const obj_for: string = obj.for;
@@ -38,7 +57,7 @@ const jsonToSchema = async ( file_path: string, schema_name: string, fileIO: IFi
 
     let output: ObjSchema = {
         name: schema_name,
-        obj: obj
+        obj: obj,
     };
 
     if ( obj_for ) {
@@ -70,18 +89,31 @@ export default function SchemaManager(
 ) {
 
     //Main function that runs the script, parses the schema files and applies them to .liquid files
-    this.run = async ( schemas_path: string, liquid_path: string) => {
+    this.run = async ( schemas_path: string, liquid_path: string): Promise<boolean> => {
+
+        validateType( schemas_path, 'schemas_path', 'string' );
+        validateType( liquid_path, 'liquid_path', 'string');
 
         console.log("Running Shopify Schema Manager")
 
         //Get all schema files from path
         const schema_files = this.getSchemaFiles( schemas_path );
 
+        if ( schema_files.length == 0 ) {
+            console.log(`Didn't find any schema files, stopping`);
+            return false;
+        }
+
         console.log(`Found ${ schema_files.length } schema files`);
         console.log(schema_files);
 
         //Create a SchemasList object from retrieved schema files
         const schemas_list: SchemasList = await this.schemaFilesToSchemasList( schemas_path, schema_files );
+
+        if( schemas_list.fn.length == 0 && schemas_list.obj.length == 0 ) {
+            console.log( `Didn't find any schemas in the schemas files, stopping` );
+            return false;
+        }
 
         //Resolve schemas and store resolved schemas in a var
         const resolved_schemas: ObjSchema[] = this.resolveSchemas( schemas_list );
@@ -90,6 +122,8 @@ export default function SchemaManager(
 
         //Write schemas to .liquid files
         this.applySchemasToLiquid( resolved_schemas, liquid_path );
+
+        return true;
     };
 
     //FileIO object to be used in methods
@@ -104,6 +138,10 @@ export default function SchemaManager(
      * @returns { string[] } - Array of schema filenames in specified directory.
      */
     this.getSchemaFiles = ( schemas_dir_path: string ): string[] => {
+
+        //Error checking
+        validateType( schemas_dir_path, 'schemas_dir_path', 'string' );
+
         //Get filenames and filter them, then store in var
         const filenames = this.fileIO.readDir( schemas_dir_path, ( filename ) => filename.endsWith( '-schema.json' ) || filename.endsWith( '-schema.js' ))
 
@@ -115,18 +153,31 @@ export default function SchemaManager(
      * Write schema objects to .liquid files. Schemas must be resolved before running this function.
      * 
      * @param { ObjSchema[] }   resolved_schemas    - Array of resolved ObjSchema objects.
-     * @param { string }        liquid_files_path   - Path to liquid sections directory.
+     * @param { string }        liquid_sections_path   - Path to liquid sections directory.
      * 
      * @returns { boolean } True on success, throws error otherwise.
      */
-    this.applySchemasToLiquid = ( resolved_schemas: ObjSchema[], liquid_files_path: string): boolean => {
+    this.applySchemasToLiquid = ( resolved_schemas: ObjSchema[], liquid_sections_path: string): boolean => {
 
+        validateType( liquid_sections_path, 'liquid_sections_path', 'string');
+        
+        if ( ! Array.isArray(resolved_schemas) ) {
+            throw new TypeError( `resolved_schemas argument must be an array` );
+        }
 
         //Get all liquid files in specified directory
-        const all_liquid_files = this.fileIO.readDir( liquid_files_path, ( filename: string ) => filename.endsWith('.liquid') );
+        const all_liquid_files = this.fileIO.readDir( liquid_sections_path, ( filename: string ) => filename.endsWith('.liquid') );
+
+        if ( all_liquid_files.length == 0 ) {
+            console.log( `Didn't find any liquid files, stopping...` );
+        }
 
         //Filter only those schemas that have a 'for' property
         const schemas: ObjSchema[] = resolved_schemas.filter( schema => schema.for && typeof schema.for == 'string' );
+
+        if ( schemas.length == 0 ) {
+            console.log( `Didn't find any schemas with a 'for' property, stopping...` );
+        }
 
         //Loop through filtered schemas
         for ( const schema of schemas ) {
@@ -137,7 +188,7 @@ export default function SchemaManager(
             //If such a file exists
             if( all_liquid_files.includes( target_file ) ) {
                 //Write the schema into this file
-                this.applySchemaToLiquidFile(schema, liquid_files_path, target_file);
+                this.applySchemaToLiquidFile(schema, liquid_sections_path, target_file);
             }
 
         }
@@ -150,17 +201,20 @@ export default function SchemaManager(
      * Write a single schema to a single liquid file. Schema must be resolved before running this function.
      * 
      * @param { ObjSchema }     schema                          - Schema to apply.
-     * @param { string }        liquid_files_path               - Path to liquid sections folder.
+     * @param { string }        liquid_sections_path               - Path to liquid sections folder.
      * @param { string }        target_file                     - Filename of the .liquid file to write to.
      * @param { WriteModeEnum } [ WriteModeEnum.OverwriteAll ]  - Write mode. See WriteModeEnum docs.
      * 
      * @return { boolean } - True on success, throws error on failure.
      */
-    this.applySchemaToLiquidFile = ( schema: ObjSchema, liquid_files_path: string, target_file: string, mode: WriteModeEnum = WriteModeEnum.OverwriteAll): boolean => {
+    this.applySchemaToLiquidFile = ( schema: ObjSchema, liquid_sections_path: string, target_file: string, mode: WriteModeEnum = WriteModeEnum.OverwriteAll): boolean => {
 
-        console.log('modifying ' + target_file );
+        validateType( liquid_sections_path, 'liquid_sections_path', 'string');
+        validateType( target_file, 'target_file', 'string');
+
+        //console.log('modifying ' + target_file );
         //Get full path to file
-        const full_path = path.join( liquid_files_path, target_file );
+        const full_path = path.join( liquid_sections_path, target_file );
 
 
         if ( mode == WriteModeEnum.OverwriteAll ) {
@@ -172,13 +226,15 @@ export default function SchemaManager(
             '{% endschema %}';
 
             //Replace the current .liquid file's schema with the new schema
-            this.fileIO.replaceInFile(/{%\s*schema\s*%}.*{%\s*endschema\s*%}/gs, schema_output, full_path)
+            const did_update_file = this.fileIO.replaceInFile(/{%\s*schema\s*%}.*{%\s*endschema\s*%}/gs, schema_output, full_path);
+
+            if( did_update_file ) {
+                console.log( 'modified ' + target_file );
+            }
         }
         
         //Return true on success
         return true;
-        
-            
     }
 
     /**
@@ -190,6 +246,9 @@ export default function SchemaManager(
      * @returns { Function | null } - Function of found schema, or null if either schema or function was not found.
      */
     this.getFunctionFromFnSchema = (all_schemas: SchemasList, schema_name: string): Function | null => {
+
+        validateType(schema_name, 'schema_name', 'string' );
+
         //Get schema by name from list of all schemas
         const target_schema = all_schemas.fn.find( schema => schema_name == schema.name);
 
@@ -211,6 +270,8 @@ export default function SchemaManager(
      * @returns { GenericObject | null } - Object of found schema, or null if either schema or object was not found.
      */
     this.getObjFromObjSchema = (all_schemas: SchemasList, schema_name: string): GenericObject | null => {
+
+        validateType( schema_name, 'schema_name', 'string' );
 
         //Get schema by name from list of all schemas
         const target_schema = all_schemas.obj.find( schema => schema_name == schema.name);
@@ -236,6 +297,8 @@ export default function SchemaManager(
      * @returns { GenericObject } - Parsed schema .obj or result of .fn.
      */
     this.parseSchema = (all_schemas: SchemasList, schema_name: string, schema_args: any[]): GenericObject => {
+
+        validateType(schema_name, 'schema_name', 'string');
 
         //Find .obj or .fn of schema
         const fn = this.getFunctionFromFnSchema( all_schemas, schema_name);
@@ -333,6 +396,8 @@ export default function SchemaManager(
      */
     this.schemaFilesToSchemasList = async ( schemas_path: string, filenames: string[]): Promise<SchemasList> => {
 
+        validateType( schemas_path, 'schemas_path', 'string' );
+
         //Create empty object for output
         let output: SchemasList = {
             fn: [],
@@ -368,6 +433,8 @@ export default function SchemaManager(
      * @return { Promise<Schema> } - Resolves to a Schema object.
      */
     this.schemaFileToObj = async ( file_path: string): Promise<Schema> => {
+
+        validateType( file_path, 'file_path', 'string' );
 
         //Get extension of the file from filename
         const file_ext = path.extname( file_path );

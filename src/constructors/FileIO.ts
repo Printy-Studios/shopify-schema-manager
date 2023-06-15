@@ -6,7 +6,7 @@ import * as fs from 'fs';
  * you can pass one as a parameter to the SchemaManager constructor. You must then implement in your custom fileIO
  * all the methods that are present in this FileIO.
  */
-export default function FileIO() {
+function FileIO() {
 
     /**
      * Replace a regex match in a file with a string.
@@ -18,6 +18,16 @@ export default function FileIO() {
      * @returns { boolean } - True if regex was found and replaced, false if regex wasn't found.
      */
     this.replaceInFile = ( regex: RegExp, replacement: string, file_path: string ): boolean => {
+
+        //Error checking
+        if( ! ( regex instanceof RegExp ) ) {
+            throw new TypeError( "'regex' param must be a RegExp object" )
+        } if( typeof replacement != 'string' ) {
+            throw new TypeError( "'replacement' param must be a string" );
+        } if( typeof file_path != 'string' ) {
+            throw new TypeError( "'file_path' param must be a string" );
+        }
+
         //Get contents of file as string
         let file_contents = fs.readFileSync( file_path ).toString();
 
@@ -44,6 +54,12 @@ export default function FileIO() {
      */
     this.readDir = ( path: string, filterFn?: ( filename: string ) => string[]): string[] => {
 
+        if ( typeof path != 'string' ) {
+            throw new TypeError( "'path' argument must be a string" );
+        } if ( filterFn && ! ( filterFn instanceof Function ) ) {
+            throw new TypeError( "'filterFn' argument must be a function!")
+        }
+
         //Get all files in specified directory
         let all_files = fs.readdirSync( path );
 
@@ -64,7 +80,14 @@ export default function FileIO() {
      * @returns { string } - Contents of file as string
      */
     this.readFile = ( path: string ): string => {
+
+        if ( typeof path != 'string' ) {
+            throw new TypeError( "'path' argument must be a string" );
+        }
+
         return fs.readFileSync( path ).toString();
     }
 
 }
+
+export default FileIO;
