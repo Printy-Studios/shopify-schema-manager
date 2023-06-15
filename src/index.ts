@@ -1,11 +1,7 @@
 import 'source-map-support/register'
 
 //Constructors
-import SchemaManager from './constructors/SchemaManager';
-import FileIO from './constructors/FileIO';
-
-//Types
-import WriteModeEnum from './types/WriteModeEnum';
+import SchemaManager from './classes/SchemaManager';
 
 const test = true;
 
@@ -14,4 +10,4 @@ const liquid_dir = test ? './example/liquid/sections' : './sections';
 
 const schema_manager = new SchemaManager();
 
-//schema_manager.run( schemas_dir, liquid_dir );
+schema_manager.run( schemas_dir, liquid_dir );

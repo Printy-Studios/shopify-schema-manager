@@ -1,13 +1,8 @@
 //Core
 import * as fs from 'fs';
+import IFileIO from '../types/IFileIO';
 
-/**
- * This is a fairly generic file IO constructor that uses the fs module. If you want to implement your own FileIO,
- * you can pass one as a parameter to the SchemaManager constructor. You must then implement in your custom fileIO
- * all the methods that are present in this FileIO.
- */
-function FileIO() {
-
+export default class FileIO implements IFileIO{
     /**
      * Replace a regex match in a file with a string.
      * 
@@ -17,7 +12,7 @@ function FileIO() {
      * 
      * @returns { boolean } - True if regex was found and replaced, false if regex wasn't found.
      */
-    this.replaceInFile = ( regex: RegExp, replacement: string, file_path: string ): boolean => {
+     replaceInFile( regex: RegExp, replacement: string, file_path: string ): boolean {
 
         //Error checking
         if( ! ( regex instanceof RegExp ) ) {
@@ -40,7 +35,7 @@ function FileIO() {
         }
 
         //Otherwise, write the new string to file and return true
-        fs.writeFileSync(file_path, file_contents);
+        fs.writeFileSync( file_path, new_file_contents );
         return true;
     }
 
@@ -52,7 +47,7 @@ function FileIO() {
      * 
      * @returns { string[] } - Array of file/directory names
      */
-    this.readDir = ( path: string, filterFn?: ( filename: string ) => string[]): string[] => {
+    readDir( path: string, filterFn?: ( filename: string ) => boolean): string[] {
 
         if ( typeof path != 'string' ) {
             throw new TypeError( "'path' argument must be a string" );
@@ -79,7 +74,7 @@ function FileIO() {
      * 
      * @returns { string } - Contents of file as string
      */
-    this.readFile = ( path: string ): string => {
+    readFile( path: string ): string {
 
         if ( typeof path != 'string' ) {
             throw new TypeError( "'path' argument must be a string" );
@@ -89,5 +84,3 @@ function FileIO() {
     }
 
 }
-
-export default FileIO;
