@@ -92,6 +92,7 @@ export default function SchemaManager(
     this.run = async ( schemas_path: string, liquid_path: string): Promise<boolean> => {
 
         validateType( schemas_path, 'schemas_path', 'string' );
+        validateType( liquid_path, 'liquid_path', 'string');
 
         console.log("Running Shopify Schema Manager")
 
@@ -137,6 +138,10 @@ export default function SchemaManager(
      * @returns { string[] } - Array of schema filenames in specified directory.
      */
     this.getSchemaFiles = ( schemas_dir_path: string ): string[] => {
+
+        //Error checking
+        validateType( schemas_dir_path, 'schemas_dir_path', 'string' );
+
         //Get filenames and filter them, then store in var
         const filenames = this.fileIO.readDir( schemas_dir_path, ( filename ) => filename.endsWith( '-schema.json' ) || filename.endsWith( '-schema.js' ))
 
@@ -154,6 +159,11 @@ export default function SchemaManager(
      */
     this.applySchemasToLiquid = ( resolved_schemas: ObjSchema[], liquid_sections_path: string): boolean => {
 
+        validateType( liquid_sections_path, 'liquid_sections_path', 'string');
+        
+        if ( ! Array.isArray(resolved_schemas) ) {
+            throw new TypeError( `resolved_schemas argument must be an array` );
+        }
 
         //Get all liquid files in specified directory
         const all_liquid_files = this.fileIO.readDir( liquid_sections_path, ( filename: string ) => filename.endsWith('.liquid') );
@@ -199,7 +209,10 @@ export default function SchemaManager(
      */
     this.applySchemaToLiquidFile = ( schema: ObjSchema, liquid_sections_path: string, target_file: string, mode: WriteModeEnum = WriteModeEnum.OverwriteAll): boolean => {
 
-        console.log('modifying ' + target_file );
+        validateType( liquid_sections_path, 'liquid_sections_path', 'string');
+        validateType( target_file, 'target_file', 'string');
+
+        //console.log('modifying ' + target_file );
         //Get full path to file
         const full_path = path.join( liquid_sections_path, target_file );
 
@@ -213,13 +226,15 @@ export default function SchemaManager(
             '{% endschema %}';
 
             //Replace the current .liquid file's schema with the new schema
-            this.fileIO.replaceInFile(/{%\s*schema\s*%}.*{%\s*endschema\s*%}/gs, schema_output, full_path)
+            const did_update_file = this.fileIO.replaceInFile(/{%\s*schema\s*%}.*{%\s*endschema\s*%}/gs, schema_output, full_path);
+
+            if( did_update_file ) {
+                console.log( 'modified ' + target_file );
+            }
         }
         
         //Return true on success
         return true;
-        
-            
     }
 
     /**
