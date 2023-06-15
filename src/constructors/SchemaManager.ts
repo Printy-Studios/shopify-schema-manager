@@ -148,15 +148,15 @@ export default function SchemaManager(
      * Write schema objects to .liquid files. Schemas must be resolved before running this function.
      * 
      * @param { ObjSchema[] }   resolved_schemas    - Array of resolved ObjSchema objects.
-     * @param { string }        liquid_files_path   - Path to liquid sections directory.
+     * @param { string }        liquid_sections_path   - Path to liquid sections directory.
      * 
      * @returns { boolean } True on success, throws error otherwise.
      */
-    this.applySchemasToLiquid = ( resolved_schemas: ObjSchema[], liquid_files_path: string): boolean => {
+    this.applySchemasToLiquid = ( resolved_schemas: ObjSchema[], liquid_sections_path: string): boolean => {
 
 
         //Get all liquid files in specified directory
-        const all_liquid_files = this.fileIO.readDir( liquid_files_path, ( filename: string ) => filename.endsWith('.liquid') );
+        const all_liquid_files = this.fileIO.readDir( liquid_sections_path, ( filename: string ) => filename.endsWith('.liquid') );
 
         //Filter only those schemas that have a 'for' property
         const schemas: ObjSchema[] = resolved_schemas.filter( schema => schema.for && typeof schema.for == 'string' );
@@ -170,7 +170,7 @@ export default function SchemaManager(
             //If such a file exists
             if( all_liquid_files.includes( target_file ) ) {
                 //Write the schema into this file
-                this.applySchemaToLiquidFile(schema, liquid_files_path, target_file);
+                this.applySchemaToLiquidFile(schema, liquid_sections_path, target_file);
             }
 
         }
