@@ -298,6 +298,8 @@ export default function SchemaManager(
      */
     this.parseSchema = (all_schemas: SchemasList, schema_name: string, schema_args: any[]): GenericObject => {
 
+        validateType(schema_name, 'schema_name', 'string');
+
         //Find .obj or .fn of schema
         const fn = this.getFunctionFromFnSchema( all_schemas, schema_name);
         let obj = null;
