@@ -89,7 +89,7 @@ export default function SchemaManager(
 ) {
 
     //Main function that runs the script, parses the schema files and applies them to .liquid files
-    this.run = async ( schemas_path: string, liquid_path: string) => {
+    this.run = async ( schemas_path: string, liquid_path: string): Promise<boolean> => {
 
         validateType( schemas_path, 'schemas_path', 'string' );
 
@@ -109,6 +109,11 @@ export default function SchemaManager(
         //Create a SchemasList object from retrieved schema files
         const schemas_list: SchemasList = await this.schemaFilesToSchemasList( schemas_path, schema_files );
 
+        if( schemas_list.fn.length == 0 && schemas_list.obj.length == 0 ) {
+            console.log( `Didn't find any schemas in the schemas files, stopping` );
+            return false;
+        }
+
         //Resolve schemas and store resolved schemas in a var
         const resolved_schemas: ObjSchema[] = this.resolveSchemas( schemas_list );
 
@@ -116,6 +121,8 @@ export default function SchemaManager(
 
         //Write schemas to .liquid files
         this.applySchemasToLiquid( resolved_schemas, liquid_path );
+
+        return true;
     };
 
     //FileIO object to be used in methods
