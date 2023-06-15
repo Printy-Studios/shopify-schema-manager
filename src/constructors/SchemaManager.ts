@@ -246,6 +246,9 @@ export default function SchemaManager(
      * @returns { Function | null } - Function of found schema, or null if either schema or function was not found.
      */
     this.getFunctionFromFnSchema = (all_schemas: SchemasList, schema_name: string): Function | null => {
+
+        validateType(schema_name, 'schema_name', 'string' );
+
         //Get schema by name from list of all schemas
         const target_schema = all_schemas.fn.find( schema => schema_name == schema.name);
 
@@ -267,6 +270,8 @@ export default function SchemaManager(
      * @returns { GenericObject | null } - Object of found schema, or null if either schema or object was not found.
      */
     this.getObjFromObjSchema = (all_schemas: SchemasList, schema_name: string): GenericObject | null => {
+
+        validateType( schema_name, 'schema_name', 'string' );
 
         //Get schema by name from list of all schemas
         const target_schema = all_schemas.obj.find( schema => schema_name == schema.name);
