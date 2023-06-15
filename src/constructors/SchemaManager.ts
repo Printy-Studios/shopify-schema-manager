@@ -183,17 +183,17 @@ export default function SchemaManager(
      * Write a single schema to a single liquid file. Schema must be resolved before running this function.
      * 
      * @param { ObjSchema }     schema                          - Schema to apply.
-     * @param { string }        liquid_files_path               - Path to liquid sections folder.
+     * @param { string }        liquid_sections_path               - Path to liquid sections folder.
      * @param { string }        target_file                     - Filename of the .liquid file to write to.
      * @param { WriteModeEnum } [ WriteModeEnum.OverwriteAll ]  - Write mode. See WriteModeEnum docs.
      * 
      * @return { boolean } - True on success, throws error on failure.
      */
-    this.applySchemaToLiquidFile = ( schema: ObjSchema, liquid_files_path: string, target_file: string, mode: WriteModeEnum = WriteModeEnum.OverwriteAll): boolean => {
+    this.applySchemaToLiquidFile = ( schema: ObjSchema, liquid_sections_path: string, target_file: string, mode: WriteModeEnum = WriteModeEnum.OverwriteAll): boolean => {
 
         console.log('modifying ' + target_file );
         //Get full path to file
-        const full_path = path.join( liquid_files_path, target_file );
+        const full_path = path.join( liquid_sections_path, target_file );
 
 
         if ( mode == WriteModeEnum.OverwriteAll ) {
